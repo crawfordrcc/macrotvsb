@@ -6,7 +6,6 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
-//import Grid from '@material-ui/core/Grid';
 import ReactPlayer from "react-player";
 import { Document, Page, pdfjs } from 'react-pdf';
 import { createMuiTheme } from '@material-ui/core/styles';
@@ -99,9 +98,11 @@ const useStyles = makeStyles(theme => ({
   },
   item: {
     minWidth: 0,
+    position: 'relative',
     align: 'center',
     justify: 'center',
     alignItems: 'center',
+    objectFit: 'contain',
   },
   card: {
     backgroundColor: '#e0f2f1',
@@ -146,52 +147,77 @@ const useStyles = makeStyles(theme => ({
 const presentation = [
   {
     src: 'p1.png',
-    width: 4,
+    width: 5,
     height: 3
   },
   {
     src: 'p2.png',
-    width: 4,
+    width: 5,
     height: 3
   },
   {
     src: 'p3.png',
-    width: 4,
+    width: 5,
     height: 3
   },
   {
     src: 'p4.png',
-    width: 4,
+    width: 5,
     height: 3
   },
   {
     src: 'p5.png',
-    width: 4,
+    width: 5,
     height: 3
   },
   {
     src: 'p6.png',
-    width: 4,
+    width: 5,
     height: 3
   },
   {
     src: 'p7.png',
-    width: 4,
+    width: 5,
     height: 3
   },
   {
     src: 'p8.png',
-    width: 4,
+    width: 5,
     height: 3
   },
   {
     src: 'p9.png',
-    width: 4,
+    width: 5,
     height: 3
   },
   {
     src: 'p10.png',
-    width: 4,
+    width: 5,
+    height: 3
+  },
+  {
+    src: 'p11.png',
+    width: 5,
+    height: 3
+  },
+  {
+    src: 'p12.png',
+    width: 5,
+    height: 3
+  },
+  {
+    src: 'p13.png',
+    width: 5,
+    height: 3
+  },
+  {
+    src: 'p14.png',
+    width: 5,
+    height: 3
+  },
+  {
+    src: 'p15.png',
+    width: 5,
     height: 3
   },
 ]
@@ -203,7 +229,7 @@ const images = [
       height: 3
     },
     {
-      src: 'IMG_0018[1].jpg',
+      src: 'IMG_0018.jpg',
       width: 4,
       height: 3
     },
@@ -214,6 +240,16 @@ const images = [
     },
     {
       src: 'IMG_0032.jpg',
+      width: 4,
+      height: 3
+    },
+    {
+      src: 'tyndall1.png',
+      width: 4,
+      height: 3
+    },
+    {
+      src: 'tyndall2.png',
       width: 4,
       height: 3
     },
@@ -273,17 +309,17 @@ const images = [
       height: 3,
     },
     {
-      src: 'afghanistan 039 (Medium).jpg',
+      src: 'afghanistan039.jpg',
       width: 4,
       height: 3,
     },
     {
-      src: 'Billede 094 (Medium).jpg',
+      src: 'Billede094.jpg',
       width: 4,
       height: 3,
     },
     {
-      src: 'HELIPAD 8-0-2011 001.jpg',
+      src: 'HELIPAD1.jpg',
       width: 4,
       height: 3,
     },
@@ -298,7 +334,7 @@ const images = [
       height: 3,
     },
     {
-      src: 'Chinook 1.jpg',
+      src: 'Chinook1.jpg',
       width: 4,
       height: 3,
     },
@@ -323,7 +359,7 @@ const images = [
       height: 3,
     },
     {
-      src: 'Cougar Football Project Walkway...jpg',
+      src: 'CougarFootballProjectWalkway.jpg',
       width: 4,
       height: 3,
     },
@@ -333,7 +369,7 @@ const images = [
       height: 3,
     },
     {
-      src: 'Tank toys 1.jpg',
+      src: 'TankToys1.jpg',
       width: 4,
       height: 3,
     },
@@ -403,11 +439,18 @@ export default function VerticalTabs() {
       </Tabs>
       <Box className={classes.imgWrapper}>
         <TabPanel value={value} index={0} className={classes.tabpanel}>
+          <img alt="complex" src="IPL_Macrotrac_TM_RGB.png" style={{
+              position:"absolute",
+              width:"20%",
+              left:"16%",
+              top:"1%",
+            }}
+          />
           <ThemeProvider theme={theme}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12} lg={12} className={classes.item}>
                 <Typography variant="h4" color="primary" className={classes.head}>
-                  Rapid Man-Depoloyable Matting
+                  Rapid Man-Deployable Matting
                 </Typography>
               </Grid>
               <Grid item xs={1} sm={1} lg={1} className={classes.item}>
@@ -421,9 +464,9 @@ export default function VerticalTabs() {
               </Grid>
               <Grid item xs={1} sm={1} lg={1} className={classes.item}>
               </Grid>
-              <Grid item xs={3} sm={3} lg={3} className={classes.item}>
+              <Grid item xs={2} sm={2} lg={2} className={classes.item}>
               </Grid>
-              <Grid item xs={6} sm={6} lg={6} className={classes.item}>
+              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
                 <Card className={classes.card}>
                   <CardContent>
                     <Typography variant="h6" component="h4" color="primary" gutterBottom>
@@ -456,16 +499,25 @@ export default function VerticalTabs() {
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={3} sm={3} lg={3} className={classes.item}>
+              <Grid item xs={6} sm={6} lg={6} className={classes.item}>
+                <img alt="complex" src="IMG_3023.jpeg" width="365"/>
               </Grid>
-              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
-                <img alt="complex" src="i-trac-pic.png" width="300" height="250" />
+              <Grid item xs={2} sm={2} lg={2} className={classes.item}>
               </Grid>
-              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
-                <img alt="complex" src="supa-trac-pic.png" width="300" height="250" />
+              <Grid item xs={2} sm={2} lg={2} className={classes.item}>
+                <img alt="complex" src="i-trac-pic.png" height="200" />
               </Grid>
-              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
-                <img alt="complex" src="supa-trac-x-press-pic.png" width="300" height="250" />
+              <Grid item xs={1} sm={1} lg={1} className={classes.item}>
+              </Grid>
+              <Grid item xs={2} sm={2} lg={2} className={classes.item}>
+                <img alt="complex" src="supa-trac-pic.png"  height="200" />
+              </Grid>
+              <Grid item xs={1} sm={1} lg={1} className={classes.item}>
+              </Grid>
+              <Grid item xs={2} sm={2} lg={2} className={classes.item}>
+                <img alt="complex" src="supa-trac-x-press-pic.png" height="200" />
+              </Grid>
+              <Grid item xs={2} sm={2} lg={2} className={classes.item}>
               </Grid>
             </Grid>
           </ThemeProvider>
@@ -499,7 +551,7 @@ export default function VerticalTabs() {
                     <Typography variant="body2" component="p" gutterBottom>
                       Shipping (sq ft): Trailer 53′: 9,655.8 Flatbed 48′: 9,655.8
                     </Typography>
-                    <Link href="https://www.macrotrac.com/wp-content/uploads/2017/11/I-Trac-Sales-Sheet-Nov-2017-sales.pdf" target=" blank">
+                    <Link href="I-TracBrochure-IPLRebrand.pdf" target=" blank">
                       Full Specification Sheet
                     </Link>
                   </CardContent>
@@ -530,7 +582,7 @@ export default function VerticalTabs() {
                     <Typography variant="body2" component="p" gutterBottom>
                       Shipping (sq ft): Trailer 53′: 21,969 Flatbed 48′: 21,969
                     </Typography>
-                    <Link href="https://www.macrotrac.com/wp-content/uploads/2016/12/Supa-Trac-Sales-Sheet.pdf" target=" blank">
+                    <Link href="./Supa-Trac_IPLRebrand.pdf" target=" blank">
                       Full Specification Sheet
                     </Link>
                   </CardContent>
@@ -561,7 +613,7 @@ export default function VerticalTabs() {
                     <Typography variant="body2" component="p" gutterBottom>
                       Shipping (sq ft): Trailer 53′: 27,600 Flatbed 48′: 27,600
                     </Typography>
-                    <Link href="https://www.macrotrac.com/wp-content/uploads/2016/12/Supa-Trac-X-Press-Product-Sheet.pdf" target=" blank">
+                    <Link href="./Supa-TracX-Press_IPLRebrand.pdf" target=" blank">
                       Full Specification Sheet
                     </Link>
                   </CardContent>
@@ -571,25 +623,28 @@ export default function VerticalTabs() {
           </ThemeProvider>
         </TabPanel>
         <TabPanel value={value} index={2} className={classes.tabpanel}>
-          <Gallery photos={presentation} onClick={openLightbox} />
-          <ModalGateway>
-            {viewerIsOpen ? (
-              <Modal onClose={closeLightbox}>
-                <Carousel
-                  currentIndex={currentImage}
-                  views={presentation}
-                  styles={{
-                    view: (base, state) => ({
-                      ...base,
-                      '& > img': {
-                        maxHeight:'95vh',
-                      },
-                    }),
-                  }}
-                />
-              </Modal>
-            ) : null}
-          </ModalGateway>
+          <Carousel
+            currentIndex={currentImage}
+            views={presentation}
+            styles={{
+              view: (base, state) => ({
+                ...base,
+                '& > img': {
+                  maxHeight:'95vh',
+                },
+              }),
+              navigationPrev: (base, state) => ({
+                ...base,
+                color:"#ffffff",
+                backgroundColor:"#09828250",
+              }),
+              navigationNext: (base, state) => ({
+                ...base,
+                color:"#ffffff",
+                backgroundColor:"#09828250",
+              }),
+            }}
+          />
         </TabPanel>
         <TabPanel value={value} index={3} className={classes.tabpanel}>
           <Grid container spacing={2}>
@@ -618,7 +673,7 @@ export default function VerticalTabs() {
           <Grid container spacing={2}>
             <Grid item xs={1} sm={1} lg={1} className={classes.item}>
             </Grid>
-            <Grid item xs={10} sm={10} lg={10} align="center" justify="center" className={classes.item}>
+            <Grid item xs={10} sm={10} lg={10} align="center" className={classes.item}>
               <TabPanel value={video} index={0}>
                 <Box width="960px" height="540px">
                   <ReactPlayer url="https://www.youtube.com/watch?v=Rv6dBWfOl2g" width='100%' height='100%' controls={true}/>
@@ -678,6 +733,14 @@ export default function VerticalTabs() {
                   Emergency Relief Solutions
                 </Typography>
               </Grid>
+              <Grid item xs={6} sm={6} lg={6} className={classes.item}>
+                <Box width="640px" height="360px">
+                  <ReactPlayer url="https://www.youtube.com/watch?v=k3vadKDTG3Q" width='100%' height='100%' controls={true}/>
+                </Box>
+              </Grid>
+              <Grid item xs={5} sm={5} lg={5} className={classes.item}>
+                <img alt="complex" src="IMG_0018.jpg" height="360"/>
+              </Grid>
               <Grid item xs={4} sm={4} lg={4} className={classes.item}>
                 <Card className={classes.card}>
                   <CardContent>
@@ -699,16 +762,21 @@ export default function VerticalTabs() {
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={8} sm={8} lg={8} className={classes.item}>
-                <Box width="640px" height="360px">
-                  <ReactPlayer url="https://www.youtube.com/watch?v=k3vadKDTG3Q" width='100%' height='100%' controls={true}/>
-                </Box>
+              <Grid item xs={3} sm={3} lg={3} className={classes.item}>
+                <img alt="complex" src="IMG_3838.jpg" height="220"/>
+              </Grid>
+              <Grid item xs={3} sm={3} lg={3} className={classes.item}>
+                <img alt="complex" src="IMG_4160.jpg" height="220"/>
+              </Grid>
+              <Grid item xs={2} sm={2} lg={2} className={classes.item}>
               </Grid>
             </Grid>
           </ThemeProvider>
         </TabPanel>
         <TabPanel value={value} index={6} className={classes.tabpanel}>
-          Coming Soon
+          <Typography variant="h4" color="primary" className={classes.head}>
+            Interactive Demo Coming Soon!
+          </Typography>
         </TabPanel>
         <TabPanel value={value} index={7} className={classes.tabpanel}>
           <ThemeProvider theme={theme}>
@@ -719,65 +787,22 @@ export default function VerticalTabs() {
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={12} lg={12} className={classes.item}>
-                <Card className={classes.card}>
-                  <CardContent>
-                    <Typography variant="h6" component="h4" color="primary" gutterBottom>
-                      I-Trac AM1 – (I-TRAC Airfield Matting 1) Light weight,
-                      Man-deployable, Heavy Duty Ruggedized Airfield Matting System
-                    </Typography>
-                    <Typography variant="body2" component="p">
-                      I-Trac AM1 is the first of the 4 Next Generation I-Trac mats.
-                      It is designed for making temporary airfield parking aprons,
-                      taxiways and in hangars that will sustain a C17 Globemaster
-                      aircraft carrying maximum payload. I-Trac AM1 is produced from
-                      the same mold the I-Trac is produced from. New technology
-                      material is mixed with the polypropylene to enhance the strength
-                      and durability of the matting panels. Preliminary first article
-                      in-house tests indicate panels are reaching a compression strength
-                      of 3,000 PSI, which is 2,400 PSI more than the standard Polypropylene
-                      I-Trac panel. When suspended at the ends, the panels failed at
-                      5,500 lbs. where they snapped in half. In static pressure tests,
-                      they held at 14,000 lbs. and failed at 15,500 lbs. Macro is currently
-                      running tests with a C17 aircraft wheel to determine the amount
-                      of tire surface that has direct contact with the mat while under
-                      35,000 pounds of pressure. They hope to have testing and evaluation
-                      completed by the end of this year using the C17 Globemaster aircraft
-                      at maximum payload weight as our targeted load specification to
-                      achieve. The I-Trac AM1 matting system will be the light weight,
-                       rapid deploy solution for temporary conus airfield Taxiways,
-                       Parking Aprons and Hangars.
-                    </Typography>
-                  </CardContent>
-                </Card>
+                <Typography variant="h6" color="primary" className={classes.head}>
+                  IPL MacroTrac strives to meet the end users mission by providing
+                  products that truly allow for the successful completion of the task.
+                  Please reach out to any of our Representatives to learn about upcoming
+                  technology that will be available in 2021. If our current product and
+                  service portfolio does not meet customer requirements, our experienced,
+                  world-class design and service teams can work closely with the customer
+                  to develop an ideal solution.
+                </Typography>
               </Grid>
-              <Grid item xs={12} sm={12} lg={12} className={classes.item}>
-                <Card className={classes.card}>
-                  <CardContent>
-                    <Typography variant="h6" component="h4" color="primary" gutterBottom>
-                      I-Trac AM2 – (I-TRAC Airfield Matting 2) Light weight Man-deployable, Heavy Duty Ruggedized THIN Airfield Matting System
-                    </Typography>
-                    <Typography variant="body2" component="p">
-                      I-Trac AM2 Thin Mat is the second of the 4 Next Generation I-Trac
-                      mats. Based upon conversations with Navy and Air Force Air
-                      Operations leadership, the I-Trac AM1 design is an impressive
-                      solution for taxiways, parking aprons and hangars. However, the
-                      2.1-inch thickness of the mat takes up too much of a logistical
-                      footprint, resulting in the use of more aircraft assets to deploy
-                      it. The matting needs to be no more than 1.25 inches thick,
-                      utilize maximum space on a 463L pallet in a standard type II
-                      TRICON, and sustain a C17 Globemaster aircraft carrying maximum
-                      payload. Macro’s engineering team is currently in the process of
-                      designing and testing the I-Trac AM2 Thin Mat using polypropylene
-                      mixed with new technology materials for enhanced strength and
-                      durability. The prototype mold was ordered several weeks ago and
-                      is expected to arrive at the end of August 2020. Preliminary design
-                      and prototype testing is expected to be complete by November of
-                      this year. The I-Trac AM2 thin matting system will be the light
-                      weight, rapid deploy solution for temporary forward-deployed
-                      airfield Taxiways, Parking Aprons and Hangars.
-                    </Typography>
-                  </CardContent>
-                </Card>
+              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
+              </Grid>
+              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
+                <img alt="complex" src="ADR.jpg" width="100%"/>
+              </Grid>
+              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
               </Grid>
             </Grid>
         </ThemeProvider>
@@ -785,7 +810,85 @@ export default function VerticalTabs() {
         <TabPanel value={value} index={8} className={classes.tabpanel}>
           <ThemeProvider theme={theme}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={12} lg={12} className={classes.item}>
+              <Grid item xs={12} sm={12} lg={12} className={classes.item} align="center">
+                <Typography  variant="h6" component="h4" color="primary">
+                  Contact Us!
+                </Typography>
+              </Grid>
+              <Grid item xs={2} sm={2} lg={2}/>
+              <Grid item xs={8} sm={8} lg={8} className={classes.item} align="center">
+                <Typography  variant="body2" component="p">
+                  If you are attending a trade show we are participating in, reach out
+                  and set up a meeting with us! We have representatives available to
+                  answer any questions you may have and provide more information to
+                  determine how our services can fit your needs.
+                </Typography>
+              </Grid>
+              <Grid item xs={2} sm={2} lg={2}/>
+              <Grid item xs={4} sm={4} lg={4}/>
+              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
+                <Card className={classes.card} align="center">
+                  <CardContent>
+                    <Typography variant="h6" component="h4" color="primary" gutterBottom>
+                       Joe Perrone
+                    </Typography>
+                    <Typography variant="strong" component="p" fontWeight="fontWeightBold">
+                      Account Manager-Government and Military
+                    </Typography>
+                    <Typography variant="body2" component="p">
+                       jperrone@macroplastics.com
+                    </Typography>
+                    <Typography variant="body2" component="p">
+                      (228) 304-0150
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={4} sm={4} lg={4}/>
+              <Grid item xs={4} sm={4} lg={4}/>
+              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
+                <Card className={classes.card} align="center">
+                  <CardContent>
+                    <Typography variant="h6" component="h4" color="primary" gutterBottom>
+                       Ryan Manz
+                    </Typography>
+                    <Typography variant="strong" component="p">
+                       Account Manager
+                    </Typography>
+                    <Typography variant="body2" component="p">
+                       ryan.manz@iplplastics.com
+                    </Typography>
+                    <Typography variant="body2" component="p">
+                       (360) 296-0839
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={4} sm={4} lg={4}/>
+              <Grid item xs={4} sm={4} lg={4}/>
+              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
+                <Card className={classes.card} align="center">
+                  <CardContent>
+                    <Typography variant="h6" component="h4" color="primary" gutterBottom>
+                       Rob Crawford
+                    </Typography>
+                    <Typography variant="strong" component="p">
+                       Senior Business Development Manager
+                    </Typography>
+                    <Typography variant="body2" component="p">
+                      rcrawford@macroplastics.com
+                    </Typography>
+                    <Typography variant="body2" component="p">
+                      (916) 759-9653
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={4} sm={4} lg={4}/>
+              <Grid item xs={12} sm={12} lg={12} className={classes.item} align="center">
+                <Typography>
+                  To request a quote or find additional resources visit our website!
+                </Typography>
                 <Link href="https://www.macrotrac.com/contact/" target=" blank">
                   https://www.macrotrac.com/contact/
                 </Link>
