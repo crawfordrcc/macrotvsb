@@ -379,7 +379,7 @@ const images = [
       height: 3,
     },
     {
-      src: 'antistat.PNG',
+      src: 'antistat.png',
       width: 4,
       height: 3,
     },
