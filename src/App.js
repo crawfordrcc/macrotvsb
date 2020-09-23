@@ -4,34 +4,24 @@ import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import ReactPlayer from "react-player";
-import { Document, Page, pdfjs } from 'react-pdf';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
 import Gallery from "react-photo-gallery";
 import Carousel, { Modal, ModalGateway } from "react-images";
 import Link from '@material-ui/core/Link';
-
-/*const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#098282',
-    },
-    secondary: {
-      main: '#ffffff',
-    },
-  },
-});*/
-
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+import Hidden from '@material-ui/core/Hidden';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import Drawer from '@material-ui/core/Drawer';
 
 const theme = createMuiTheme({
   palette: {
@@ -54,7 +44,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+          <Typography component="div">{children}</Typography>
         </Box>
       )}
     </div>
@@ -78,70 +68,93 @@ const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
     display: 'flex',
-    minWidth: '100%',
-    minHeight: '100%',
+    position: 'relative',
+    minWidth: '100vw',
+    minHeight: '100vh',
+  },
+  drawer: {
+    [theme.breakpoints.down('xs')]: {
+      position:'fixed',
+    },
+    [theme.breakpoints.up('sm')]: {
+      position:'sticky',
+      height: "100%",
+    },
+    minWidth: "150px",
+    width: "15vw",
+    top:0,
   },
   tabs: {
-    //position:'absolute',
-    borderRight: `1px solid ${theme.palette.divider}`,
-    backgroundColor: 'white',
-    color: '#098282',
-    height: "100vh",
-    minWidth: "15vw",
+    minWidth: "150px",
     width: "15vw",
+    top:0,
+    borderRight: `1px solid ${theme.palette.divider}`,
+    color: '#098282',
   },
   tab: {
     minHeight: "10vh",
   },
   tabpanel: {
-  //  paddingLeft: "15vw",
+    position:'relative',
+    width:"100%",
+    height:"100%",
+    marginTop:"40px",
+  },
+  grid:{
+    position: 'relative',
+    height: "100%",
+    minWidth: "100%",
   },
   item: {
-    minWidth: 0,
     position: 'relative',
+    width: '100%',
+    height: '100%',
     align: 'center',
     justify: 'center',
     alignItems: 'center',
-    objectFit: 'contain',
   },
   card: {
+    position: 'relative',
     backgroundColor: '#e0f2f1',
   },
   videotabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
     backgroundColor: '#098282',
     color: 'white',
-    width: '100%',
+    width: '90%',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  head: {
-    display: 'flex',
-    padding: '2%',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   block: {
     display: 'flex',
     paddingLeft: '7%',
     paddingRight: '7%',
   },
-  imgWrapper:{
-    display: 'inline',
-    minWidth:'84%',
-    minHeight:'100%',
-    justifyContent: 'center',
-  },
   img:{
     position:'absolute',
     width:'8%',
-    height:'10%',
-    right: '1%',
-    bottom: '1%',
+    right: '2%',
+    top: '1%',
   },
   presentation:{
     border:'1px solid #098282',
   },
+  media: {
+    width: "90%",
+    height: 0,
+    paddingTop: '56.25%', // 16:9
+    paddingBottom:'10%',
+  },
+  playerwrapper: {
+    position: 'relative',
+    paddingTop: '56.25%',
+  },
+  player: {
+    position:'absolute',
+    top:0,
+    left:0,
+  },
+  toolbar: theme.mixins.toolbar,
 }));
 
 const presentation = [
@@ -387,21 +400,24 @@ const images = [
 
 export default function VerticalTabs() {
   const classes = useStyles();
+  const tabNames = ["Welcome", "Our Products", "Military Presentation", "Videos", "Gallery",
+                    "Disaster Relief", "Virtual Fob", "2021 New Product Innovation", "Contact"];
+
+  const [name, setName] = React.useState("Welcome");
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
   const [value, setValue] = React.useState(0);
   const [video, setVideo] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    setName(tabNames[newValue]);
   };
 
   const handleVideoChange = (event, newValue) => {
     setVideo(newValue);
-  }
-
-  const [numPages, setNumPages] = React.useState(null);
-  const [pageNumber, setPageNumber] = React.useState(1);
-
-  function onDocumentLoadSuccess({ numPages }) {
-    setNumPages(numPages);
   }
 
   const [currentImage, setCurrentImage] = useState(0);
@@ -417,8 +433,8 @@ export default function VerticalTabs() {
     setViewerIsOpen(false);
   };
 
-  return (
-    <div className={classes.root}>
+  const drawer = (
+    <ThemeProvider theme={theme}>
       <Tabs
         orientation="vertical"
         value={value}
@@ -437,36 +453,87 @@ export default function VerticalTabs() {
         <Tab label="2021 New Product Innovation" className={classes.tab} {...a11yProps(7)} />
         <Tab label="Contact Us" className={classes.tab} {...a11yProps(8)} />
       </Tabs>
-      <Box className={classes.imgWrapper}>
+    </ThemeProvider>
+  )
+
+  return (
+    <div className={classes.root}>
+      <ThemeProvider theme={theme}>
+        <Hidden smUp>
+          <AppBar position="fixed">
+            <Toolbar color="primary">
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" noWrap>
+                {name}
+              </Typography>
+            </Toolbar>
+          </AppBar>
+        </Hidden>
+        <Hidden smUp>
+          <Drawer
+            variant="temporary"
+            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            className={classes.drawer}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+          >
+            {drawer}
+          </Drawer>
+        </Hidden>
+        <Hidden only="xs">
+          <Drawer
+            variant="permanent"
+            open
+            className={classes.drawer}
+          >
+            {drawer}
+          </Drawer>
+        </Hidden>
+        <Hidden smUp>
+          <div width="100vw" height="64px" position='fixed' top="0" />
+        </Hidden>
         <TabPanel value={value} index={0} className={classes.tabpanel}>
           <img alt="complex" src="IPL_Macrotrac_TM_RGB.png" style={{
               position:"absolute",
               width:"20%",
-              left:"16%",
+              left:"1%",
               top:"1%",
             }}
           />
-          <ThemeProvider theme={theme}>
-            <Grid container spacing={2}>
+          <img alt="complex" src="Flag-United-States-of-America.png" className={classes.img} />
+            <Grid container spacing={2} className={classes.grid} justify="center" alignItems="center">
               <Grid item xs={12} sm={12} lg={12} className={classes.item}>
-                <Typography variant="h4" color="primary" className={classes.head}>
+                <Typography variant="h4" color="primary" align="center">
                   Rapid Man-Deployable Matting
                 </Typography>
               </Grid>
-              <Grid item xs={1} sm={1} lg={1} className={classes.item}>
-              </Grid>
-              <Grid item xs={10} sm={10} lg={10} className={classes.item}>
+              <Hidden only="xs">
+                <Grid item sm={1} lg={1} className={classes.item} />
+              </Hidden>
+              <Grid item xs={12} sm={10} lg={10} className={classes.item}>
                 <Box lineHeight={2} className={classes.block}>
                     IPL MacroTrac™ is the number one matting solution for the military.
                     If your mission requires; rapid deployment, easy transport, no special training or
                     tools then we have the solution for you! Made in the USA.
                 </Box>
               </Grid>
-              <Grid item xs={1} sm={1} lg={1} className={classes.item}>
-              </Grid>
-              <Grid item xs={2} sm={2} lg={2} className={classes.item}>
-              </Grid>
-              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
+              <Hidden only="xs">
+                <Grid item sm={1} lg={1} className={classes.item} />
+              </Hidden>
+              <Hidden smDown>
+                <Grid item lg={2} className={classes.item} />
+              </Hidden>
+              <Grid item xs={12} sm={6} lg={4} className={classes.item}>
                 <Card className={classes.card}>
                   <CardContent>
                     <Typography variant="h6" component="h4" color="primary" gutterBottom>
@@ -499,40 +566,72 @@ export default function VerticalTabs() {
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={6} sm={6} lg={6} className={classes.item}>
-                <img alt="complex" src="IMG_3023.jpeg" width="365"/>
+              <Grid item xs={12} sm={6} lg={4} className={classes.item} align="center">
+                <Box position="relative" width="100%" height="100%">
+                  <img alt="complex" src="IMG_3023.jpeg" width="100%"/>
+                </Box>
               </Grid>
-              <Grid item xs={2} sm={2} lg={2} className={classes.item}>
+              <Hidden smDown>
+                <Grid item lg={2} className={classes.item} />
+              </Hidden>
+              <Grid item xs={12} sm={4} lg={3} className={classes.item}>
+                <Card position="relative" align="center" justify="center">
+                  <CardHeader
+                    title="I-Trac"
+                    subheader="Heavyweight Flooring"
+                    titleTypographyProps={{color:"primary"}}
+                  />
+                  <CardMedia
+                    className={classes.media}
+                    image="i-trac-pic.png"
+                    title="I-Trac"
+                  />
+                </Card>
               </Grid>
-              <Grid item xs={2} sm={2} lg={2} className={classes.item}>
-                <img alt="complex" src="i-trac-pic.png" height="200" />
+              <Grid item xs={12} sm={4} lg={3} className={classes.item}>
+                <Card align="center" justify="center">
+                  <CardHeader
+                    title="Supa-Trac"
+                    subheader="Middleweight Flooring"
+                    titleTypographyProps={{color:"primary"}}
+                  />
+                  <CardMedia
+                    className={classes.media}
+                    image="supa-trac-pic.png"
+                    title="Supa-Trac"
+                  />
+                </Card>
               </Grid>
-              <Grid item xs={1} sm={1} lg={1} className={classes.item}>
-              </Grid>
-              <Grid item xs={2} sm={2} lg={2} className={classes.item}>
-                <img alt="complex" src="supa-trac-pic.png"  height="200" />
-              </Grid>
-              <Grid item xs={1} sm={1} lg={1} className={classes.item}>
-              </Grid>
-              <Grid item xs={2} sm={2} lg={2} className={classes.item}>
-                <img alt="complex" src="supa-trac-x-press-pic.png" height="200" />
-              </Grid>
-              <Grid item xs={2} sm={2} lg={2} className={classes.item}>
+              <Grid item xs={12} sm={4} lg={3} className={classes.item}>
+                <Card align="center" justify="center">
+                  <CardHeader
+                    title="Supa-Trac X-Press"
+                    subheader="Lightweight Flooring"
+                    titleTypographyProps={{color:"primary"}}
+                  />
+                  <CardMedia
+                    className={classes.media}
+                    image="supa-trac-x-press-pic.png"
+                    title="Supa-Trac X-Press"
+                  />
+                </Card>
               </Grid>
             </Grid>
-          </ThemeProvider>
-          <img alt="complex" src="Flag-United-States-of-America.png" className={classes.img} />
         </TabPanel>
         <TabPanel value={value} index={1} className={classes.tabpanel}>
-          <ThemeProvider theme={theme}>
             <Grid container spacing={2}>
-              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
+              <Grid item xs={12} sm={4} lg={4} className={classes.item}>
                 <Card align="center" justify="center">
+                  <CardHeader
+                    title="I-Trac"
+                    titleTypographyProps={{color:"primary"}}
+                  />
+                  <CardMedia
+                    className={classes.media}
+                    image="i-trac-pic.png"
+                    title="I-Trac"
+                  />
                   <CardContent>
-                    <Typography variant="h6" component="h4" color="primary" gutterBottom>
-                      I-Trac
-                    </Typography>
-                    <img alt="complex" src="i-trac-pic.png" width="100%" />
                     <Typography variant="h6" component="h4" color="primary" gutterBottom>
                       Specifications
                     </Typography>
@@ -557,13 +656,18 @@ export default function VerticalTabs() {
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
+              <Grid item xs={12} sm={4} lg={4} className={classes.item}>
                 <Card align="center" justify="center">
+                  <CardHeader
+                    title="Supa-Trac"
+                    titleTypographyProps={{color:"primary"}}
+                  />
+                  <CardMedia
+                    className={classes.media}
+                    image="supa-trac-pic.png"
+                    title="Supa-Trac"
+                  />
                   <CardContent>
-                    <Typography variant="h6" component="h4" color="primary" gutterBottom>
-                      Supa-Trac
-                    </Typography>
-                    <img alt="complex" src="supa-trac-pic.png" width="100%" />
                     <Typography variant="h6" component="h4" color="primary" gutterBottom>
                       Specifications
                     </Typography>
@@ -588,13 +692,18 @@ export default function VerticalTabs() {
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
+              <Grid item xs={12} sm={4} lg={4} className={classes.item}>
                 <Card align="center" justify="center">
+                  <CardHeader
+                    title="Supa-Trac X-Press"
+                    titleTypographyProps={{color:"primary"}}
+                  />
+                  <CardMedia
+                    className={classes.media}
+                    image="supa-trac-x-press-pic.png"
+                    title="Supa-Trac X-Press"
+                  />
                   <CardContent>
-                    <Typography variant="h6" component="h4" color="primary" gutterBottom>
-                      Supa-Trac X-Press
-                    </Typography>
-                    <img alt="complex" src="supa-trac-x-press-pic.png" width="100%" />
                     <Typography variant="h6" component="h4" color="primary" gutterBottom>
                       Specifications
                     </Typography>
@@ -620,7 +729,6 @@ export default function VerticalTabs() {
                 </Card>
               </Grid>
             </Grid>
-          </ThemeProvider>
         </TabPanel>
         <TabPanel value={value} index={2} className={classes.tabpanel}>
           <Carousel
@@ -646,63 +754,61 @@ export default function VerticalTabs() {
             }}
           />
         </TabPanel>
-        <TabPanel value={value} index={3} className={classes.tabpanel}>
-          <Grid container spacing={2}>
-            <Grid item xs={1} sm={1} lg={1} className={classes.item}>
-            </Grid>
-            <Grid item xs={10} sm={10} lg={10} className={classes.item}>
-              <Tabs
-                orientation="horizontal"
-                value={video}
-                onChange={handleVideoChange}
-                aria-label="Vertical tabs example"
-                indicatorColor="primary"
-                centered
-                className={classes.videotabs}
-              >
-                <Tab label="Track Dozer on I-Trac" {...a11yProps(0)} />
-                <Tab label="How to Install I-Trac" {...a11yProps(1)} />
-                <Tab label="Oil Rig on I-Trac" {...a11yProps(2)} />
-                <Tab label="Hovercraft Pad" {...a11yProps(3)} />
-                <Tab label="Construction Access Roadway" {...a11yProps(4)} />
-              </Tabs>
-            </Grid>
-            <Grid item xs={1} sm={1} lg={1} className={classes.item}>
-            </Grid>
-          </Grid>
-          <Grid container spacing={2}>
-            <Grid item xs={1} sm={1} lg={1} className={classes.item}>
-            </Grid>
-            <Grid item xs={10} sm={10} lg={10} align="center" className={classes.item}>
-              <TabPanel value={video} index={0}>
-                <Box width="960px" height="540px">
-                  <ReactPlayer url="https://www.youtube.com/watch?v=Rv6dBWfOl2g" width='100%' height='100%' controls={true}/>
-                </Box>
-              </TabPanel>
-              <TabPanel value={video} index={1}>
-                <Box width="960px" height="540px">
-                  <ReactPlayer url="https://www.youtube.com/watch?v=XJ1kR1WzlfY" width='100%' height='100%' controls={true}/>
-                </Box>
-              </TabPanel>
-              <TabPanel value={video} index={2}>
-                <Box width="960px" height="540px">
-                  <ReactPlayer url="https://www.youtube.com/watch?v=o2hrInbjhRs" width='100%' height='100%' controls={true}/>
-                </Box>
-              </TabPanel>
-              <TabPanel value={video} index={3}>
-                <Box width="960px" height="540px">
-                  <ReactPlayer url="https://www.youtube.com/watch?v=t21Q2H7QcpA" width='100%' height='100%' controls={true}/>
-                </Box>
-              </TabPanel>
-              <TabPanel value={video} index={4}>
-                <Box width="960px" height="540px">
-                  <ReactPlayer url="https://www.youtube.com/watch?v=crxIB0lkkC4" width='100%' height='100%' controls={true}/>
-                </Box>
-              </TabPanel>
-            </Grid>
-            <Grid item xs={1} sm={1} lg={1} className={classes.item}>
-            </Grid>
-          </Grid>
+        <TabPanel value={value} index={3} align="center" className={classes.tabpanel}>
+          <Tabs
+            orientation="horizontal"
+            value={video}
+            onChange={handleVideoChange}
+            aria-label="Vertical tabs example"
+            indicatorColor="primary"
+            centered
+            className={classes.videotabs}
+          >
+            <Tab label="Track Dozer on I-Trac" {...a11yProps(0)} />
+            <Tab label="How to Install I-Trac" {...a11yProps(1)} />
+            <Tab label="Oil Rig on I-Trac" {...a11yProps(2)} />
+            <Tab label="Hovercraft Pad" {...a11yProps(3)} />
+            <Tab label="Construction Access Roadway" {...a11yProps(4)} />
+          </Tabs>
+          <TabPanel value={video} index={0} align="center" className={classes.tabpanel}>
+            <Box width="80%">
+              <Box className={classes.playerwrapper}>
+                <ReactPlayer url="https://www.youtube.com/watch?v=Rv6dBWfOl2g"
+                controls={true}
+                width='100%'
+                height='100%'
+                className={classes.player}/>
+              </Box>
+            </Box>
+          </TabPanel>
+          <TabPanel value={video} index={1} align="center" className={classes.tabpanel}>
+            <Box width="80%">
+              <Box className={classes.playerwrapper}>
+                <ReactPlayer url="https://www.youtube.com/watch?v=XJ1kR1WzlfY" width='100%' height='100%' controls={true} className={classes.player}/>
+              </Box>
+            </Box>
+          </TabPanel>
+          <TabPanel value={video} index={2} align="center" className={classes.tabpanel}>
+            <Box width="80%">
+              <Box className={classes.playerwrapper}>
+                <ReactPlayer url="https://www.youtube.com/watch?v=o2hrInbjhRs" width='100%' height='100%' controls={true} className={classes.player}/>
+              </Box>
+            </Box>
+          </TabPanel>
+          <TabPanel value={video} index={3} align="center" className={classes.tabpanel}>
+            <Box width="80%">
+              <Box className={classes.playerwrapper}>
+                <ReactPlayer url="https://youtu.be/t21Q2H7QcpA" width='100%' height='100%' controls={true} className={classes.player}/>
+              </Box>
+            </Box>
+          </TabPanel>
+          <TabPanel value={video} index={4} align="center" className={classes.tabpanel}>
+            <Box width="80%">
+              <Box className={classes.playerwrapper}>
+                <ReactPlayer url="https://www.youtube.com/watch?v=crxIB0lkkC4" width='100%' height='100%' controls={true} className={classes.player}/>
+              </Box>
+            </Box>
+          </TabPanel>
         </TabPanel>
         <TabPanel value={value} index={4} className={classes.tabpanel}>
           <Gallery photos={images} onClick={openLightbox} />
@@ -726,22 +832,13 @@ export default function VerticalTabs() {
           </ModalGateway>
         </TabPanel>
         <TabPanel value={value} index={5} className={classes.tabpanel}>
-          <ThemeProvider theme={theme}>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} justify="center" alignItems="center">
               <Grid item xs={12} sm={12} lg={12} className={classes.item}>
-                <Typography variant="h4" color="primary" className={classes.head}>
+                <Typography variant="h4" color="primary" align="center">
                   Emergency Relief Solutions
                 </Typography>
               </Grid>
-              <Grid item xs={6} sm={6} lg={6} className={classes.item}>
-                <Box width="640px" height="360px">
-                  <ReactPlayer url="https://www.youtube.com/watch?v=k3vadKDTG3Q" width='100%' height='100%' controls={true}/>
-                </Box>
-              </Grid>
-              <Grid item xs={5} sm={5} lg={5} className={classes.item}>
-                <img alt="complex" src="IMG_0018.jpg" height="360"/>
-              </Grid>
-              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
+              <Grid item xs={12} sm={10} lg={6} className={classes.item}>
                 <Card className={classes.card}>
                   <CardContent>
                     <Typography variant="h6" component="h4" color="primary" gutterBottom>
@@ -762,32 +859,44 @@ export default function VerticalTabs() {
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={3} sm={3} lg={3} className={classes.item}>
-                <img alt="complex" src="IMG_3838.jpg" height="220"/>
+              <Grid item xs={12} sm={12} lg={10} align="center" className={classes.item}>
+                <Box width="80%">
+                  <Box className={classes.playerwrapper}>
+                    <ReactPlayer url="https://www.youtube.com/watch?v=k3vadKDTG3Q" width='100%' height='100%' controls={true} className={classes.player}/>
+                  </Box>
+                </Box>
               </Grid>
-              <Grid item xs={3} sm={3} lg={3} className={classes.item}>
-                <img alt="complex" src="IMG_4160.jpg" height="220"/>
+              <Grid item xs={12} sm={4} lg={3} align="center" className={classes.item}>
+                <Box width="90%" height="100%">
+                  <img alt="complex" src="IMG_0018.jpg" width="100%"/>
+                </Box>
               </Grid>
-              <Grid item xs={2} sm={2} lg={2} className={classes.item}>
+              <Grid item xs={12} sm={4} lg={3} align="center" className={classes.item}>
+                <Box width="90%" height="100%">
+                  <img alt="complex" src="IMG_3838.jpg" width="100%"/>
+                </Box>
+              </Grid>
+              <Grid item xs={12} sm={4} lg={3} align="center" className={classes.item}>
+                <Box width="90%" height="100%">
+                  <img alt="complex" src="IMG_4160.jpg" width="100%"/>
+                </Box>
               </Grid>
             </Grid>
-          </ThemeProvider>
         </TabPanel>
         <TabPanel value={value} index={6} className={classes.tabpanel}>
-          <Typography variant="h4" color="primary" className={classes.head}>
+          <Typography variant="h4" color="primary" align="center">
             Interactive Demo Coming Soon!
           </Typography>
         </TabPanel>
         <TabPanel value={value} index={7} className={classes.tabpanel}>
-          <ThemeProvider theme={theme}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12} lg={12} className={classes.item}>
-                <Typography variant="h4" color="primary" className={classes.head}>
+                <Typography variant="h4" color="primary" align="center">
                   New Product Innovation
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={12} lg={12} className={classes.item}>
-                <Typography variant="h6" color="primary" className={classes.head}>
+                <Typography variant="h6" color="primary">
                   IPL MacroTrac strives to meet the end users mission by providing
                   products that truly allow for the successful completion of the task.
                   Please reach out to any of our Representatives to learn about upcoming
@@ -797,26 +906,24 @@ export default function VerticalTabs() {
                   to develop an ideal solution.
                 </Typography>
               </Grid>
-              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
+              <Grid item xs={1} sm={2} lg={4} className={classes.item}>
               </Grid>
-              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
+              <Grid item xs={10} sm={8} lg={4} className={classes.item}>
                 <img alt="complex" src="ADR.jpg" width="100%"/>
               </Grid>
-              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
+              <Grid item xs={1} sm={2} lg={4} className={classes.item}>
               </Grid>
             </Grid>
-        </ThemeProvider>
         </TabPanel>
         <TabPanel value={value} index={8} className={classes.tabpanel}>
-          <ThemeProvider theme={theme}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12} lg={12} className={classes.item} align="center">
                 <Typography  variant="h6" component="h4" color="primary">
                   Contact Us!
                 </Typography>
               </Grid>
-              <Grid item xs={2} sm={2} lg={2}/>
-              <Grid item xs={8} sm={8} lg={8} className={classes.item} align="center">
+              <Grid item xs={1} sm={2} lg={2}/>
+              <Grid item xs={10} sm={8} lg={8} className={classes.item}>
                 <Typography  variant="body2" component="p">
                   If you are attending a trade show we are participating in, reach out
                   and set up a meeting with us! We have representatives available to
@@ -824,15 +931,17 @@ export default function VerticalTabs() {
                   determine how our services can fit your needs.
                 </Typography>
               </Grid>
-              <Grid item xs={2} sm={2} lg={2}/>
-              <Grid item xs={4} sm={4} lg={4}/>
-              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
+              <Grid item xs={1} sm={2} lg={2}/>
+              <Hidden only="xs">
+                <Grid item sm={2} lg={3}/>
+              </Hidden>
+              <Grid item xs={12} sm={8} lg={6} className={classes.item}>
                 <Card className={classes.card} align="center">
                   <CardContent>
                     <Typography variant="h6" component="h4" color="primary" gutterBottom>
                        Joe Perrone
                     </Typography>
-                    <Typography variant="strong" component="p" fontWeight="fontWeightBold">
+                    <Typography variant="body1" component="p" fontWeight="fontWeightBold">
                       Account Manager-Government and Military
                     </Typography>
                     <Typography variant="body2" component="p">
@@ -844,9 +953,11 @@ export default function VerticalTabs() {
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={4} sm={4} lg={4}/>
-              <Grid item xs={4} sm={4} lg={4}/>
-              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
+              <Hidden only="xs">
+                <Grid item sm={2} lg={3}/>
+                <Grid item sm={2} lg={3}/>
+              </Hidden>
+              <Grid item xs={12} sm={8} lg={6} className={classes.item}>
                 <Card className={classes.card} align="center">
                   <CardContent>
                     <Typography variant="h6" component="h4" color="primary" gutterBottom>
@@ -864,9 +975,11 @@ export default function VerticalTabs() {
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={4} sm={4} lg={4}/>
-              <Grid item xs={4} sm={4} lg={4}/>
-              <Grid item xs={4} sm={4} lg={4} className={classes.item}>
+              <Hidden only="xs">
+                <Grid item sm={2} lg={3}/>
+                <Grid item sm={2} lg={3}/>
+              </Hidden>
+              <Grid item xs={12} sm={8} lg={6} className={classes.item}>
                 <Card className={classes.card} align="center">
                   <CardContent>
                     <Typography variant="h6" component="h4" color="primary" gutterBottom>
@@ -884,7 +997,9 @@ export default function VerticalTabs() {
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={4} sm={4} lg={4}/>
+              <Hidden only="xs">
+                <Grid item sm={2} lg={3}/>
+              </Hidden>
               <Grid item xs={12} sm={12} lg={12} className={classes.item} align="center">
                 <Typography>
                   To request a quote or find additional resources visit our website!
@@ -894,9 +1009,8 @@ export default function VerticalTabs() {
                 </Link>
               </Grid>
             </Grid>
-          </ThemeProvider>
         </TabPanel>
-      </Box>
+      </ThemeProvider>
     </div>
   );
 }
